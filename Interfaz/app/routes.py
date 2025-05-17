@@ -212,10 +212,11 @@ def inventory():
             flash('Invalid file or no file selected!', 'error')
             return redirect(request.url)
 
-        # Rename the image file to the CB value
+        # Save the image with the CB as its filename
         filename = secure_filename(f"{product_cb}.{product_image.filename.rsplit('.', 1)[1].lower()}")
-        image_path = os.path.join(UPLOAD_FOLDER, filename)
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
+        upload_path = os.path.join('app', 'static', 'uploads', 'products')
+        os.makedirs(upload_path, exist_ok=True)  # Ensure the folder exists
+        image_path = os.path.join(upload_path, filename)
         product_image.save(image_path)
 
         # Add the product to the dummy database
