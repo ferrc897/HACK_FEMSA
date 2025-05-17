@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 58
+names: ['ACEITE NUTRIOLI 400 ML', 'ACEITE VEGETAL LA POSADA 800 ML', 'AGUA ALCALINA VITAWA 1.5 LTS', 'AGUA ALCALINA VITAWA 1LT', 'AGUA BIOLEVE 1', 'AGUA BIOLEVE 1.5 LTS', 'AGUA PURIFICADA BIOLEVE 0', 'AGUA PURIFICADA BIOLEVE 0.5L 8 PACK', 'ATUN DOLORES EN ACEITE 130GRS', 'Aceite Comestible Nutrioli 850ml', 'Aceite Sabrosano 850ml', 'Aceite de bebe', 'Aceite para bebe Baby Magic Mennen 100 ml bote', 'Agua Bioleve 1L 6pack', 'Arroz La Posada 900 gr', 'Atun Dolores aceite 295gr lata', 'Atun Mazatun Agua Sin Soya 130grs', 'Azucar Estandar La Posada 1 kg', 'CAFE SOLUBLE ANDATTI DESCAFEINADO 275G', 'CARNATION Leche Evaporada 720g', 'CHEETOS TORCIDITOS 240GR', 'Cafe Soluble Andatti 275g', 'Cheetos grandes', 'Chicharron de Cerdo Intenso Bitz 120 gr.', 'Chicharron de Cerdo Natural Bitz 120 gr', 'DETERGENTE AZALEA MULTIUSOS 800G', 'DOLORES ENSALADA CON VERDURAS MAXI CUP CAN 240gr', 'Desodorante AXE Fusion 150ml', 'Dolores SURFY  Cup Can Elotitos 24135 gr', 'Ensalada Atun Mazatun  CupCan', 'Frijol La Sierra Chorizo 430 bolsa', 'Frijol Pinto La Posada 900gr', 'Hig Petalo UltraJumbo 6s 234h', 'Higienico Cottonelle Elegance XL 252h', 'Higienico Suavel 325h 4rollos', 'La Lechera Sirve Facil 335gr Bote', 'NAN 1 OPTIPRO Formula Infantil 12x400gMX', 'NAN 2 OPTIPRO Formula Infantil 12x400gMX', 'NAN 3 OPTIPRO Formula Infantil 12x400gMX', 'PAPEL HIGIENICO AZALEA 4 ROLLOS 350 HOJAS', 'PAPEL HIGIENICO AZALEA 4S CON AROMA', 'PLC NUTRALAT FORTE 1 LT', 'PLC NUTRALAT FORTE 1.5 LT', 'PLC NUTRALAT FORTE 1LT', 'Panales Tikytin 14pz T4', 'Panales Tikytin 14pz T5', 'Papas Chips Barcel 170 gr bolsa con sal', 'Papel Higienico Azalea 6 Rollos 500 Hojas', 'Papel Regio Rinde 4pz', 'Papel aluminio festivo rollo 76 m X 30 cm pz', 'RUFFLES QUESO 185GR', 'Sabrosano Mantequila 850 ml', 'Shampoo KleenBebe Manzanilla 250ml', 'Takis Blue 75g', 'Tikytin Ultra talla 5 X Grande 36 4', 'Tikytin Ultra talla 5 X-Grande 364', 'Vitawa 1', 'chicharrones de cerdo intenso']
+
+roboflow:
+  workspace: hamster-eqns8
+  project: product-detection-rrwfr
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/hamster-eqns8/product-detection-rrwfr/dataset/1
