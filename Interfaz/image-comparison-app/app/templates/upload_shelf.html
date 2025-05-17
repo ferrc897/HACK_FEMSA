@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Shelf Image{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Upload Shelf Image</h1>
+    <form action="{{ url_for('app.upload_shelf') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="shelf_image">Select Shelf Image:</label>
+            <input type="file" id="shelf_image" name="shelf_image" accept="image/*" required>
+        </div>
+        <button type="submit">Upload</button>
+    </form>
+</div>
+{% endblock %}
