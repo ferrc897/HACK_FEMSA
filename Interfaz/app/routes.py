@@ -219,15 +219,27 @@ def inventory():
         image_path = os.path.join(upload_path, filename)
         product_image.save(image_path)
 
+        # Fetch charola, posicion, and frentes from the CSV file
+        charola, posicion, frentes = 'N/A', 'N/A', 'N/A'
+        if os.path.exists(CSV_FILE):
+            with open(CSV_FILE, mode='r', encoding='latin-1') as file:  # Use 'latin-1' encoding to handle special characters
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row['CB'] == product_cb:
+                        charola = row.get('Charola', 'N/A')
+                        posicion = row.get('Posicion en Charola', 'N/A')
+                        frentes = row.get('Cantidad de Frentes', 'N/A')
+                        break
+
         # Add the product to the dummy database
         inventory_db.append({
             'cb': product_cb,
             'name': product_name,
             'quantity': product_quantity,
             'image': filename,
-            'charola': 'N/A',  # Dummy data for charola
-            'posicion': 'N/A',  # Dummy data for posicion
-            'frentes': 'N/A'  # Dummy data for frentes
+            'charola': charola,
+            'posicion': posicion,
+            'frentes': frentes
         })
 
         flash('Product added successfully!', 'success')
