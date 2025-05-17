@@ -3,51 +3,58 @@
 {% block title %}Inventory{% endblock %}
 
 {% block content %}
-<div class="container inventory-container">
-    <div class="inventory-grid">
-        <h2>Inventario</h2>
-        <table id="inventory-table">
-            <thead>
-                <tr>
-                    <th>CB</th>
-                    <th>Nombre</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr data-charola="{{ product.charola }}" 
-                    data-posicion="{{ product.posicion }}" 
-                    data-frentes="{{ product.frentes }}" 
-                    data-image="{{ url_for('static', filename='uploads/products/' + product.image) }}">
-                    <td>{{ product.cb }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.quantity }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container inventory-layout" style="display: flex; gap: 40px; align-items: flex-start;">
+    <div style="flex: 1;">
+        <div class="inventory-header" style="display: flex; align-items: center; justify-content: space-between;">
+            <h2>Inventario</h2>
+            <input type="text" id="search-bar" placeholder="Buscar por CB" style="padding: 5px; width: 200px;">
+        </div>
+        <div class="inventory-grid">
+            <table id="inventory-table">
+                <thead>
+                    <tr>
+                        <th>CB</th>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr data-charola="{{ product.charola }}" 
+                        data-posicion="{{ product.posicion }}" 
+                        data-frentes="{{ product.frentes }}" 
+                        data-image="{{ url_for('static', filename='uploads/products/' + product.image) }}">
+                        <td class="cb-column">{{ product.cb }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="upload-form">
-        <h2>Registrar producto nuevo</h2>
+
+    <!-- Columna derecha: formulario -->
+    <div class="upload-form" style="flex: 0 0 300px; padding: 20px; border-radius: 10px; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h2 style="color: #d32f2f;">Registrar producto nuevo</h2>
         <form action="{{ url_for('app.inventory') }}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="product_cb"><strong>CB:</strong></label>
-                <input type="number" id="product_cb" name="product_cb" required min="0" style="display: inline-block; width: 20.5ch; height: 1ch;">
+                <input type="number" id="product_cb" name="product_cb" required min="0" style="width: 240px;">
             </div>
             <div class="form-group">
                 <label for="product_name"><strong>Nombre:</strong></label>
-                <input type="text" id="product_name" name="product_name" required style="display: inline-block; width: 16ch; height: 1ch;">
+                <input type="text" id="product_name" name="product_name" required style="width: 274px;">
             </div>
             <div class="form-group">
                 <label for="product_quantity"><strong>Cantidad:</strong></label>
-                <input type="number" id="product_quantity" name="product_quantity" min="0" max="9999" style="width: 6ch; height: 0.5ch;" required>
+                <input type="number" id="product_quantity" name="product_quantity" min="0" max="1999" required style="width: 50px;">
             </div>
             <div class="form-group">
                 <label for="product_image"><strong>Sube la imagen:</strong></label>
-                <input type="file" id="product_image" name="product_image" accept="image/*" required style="width: 25ch;">
+                <input type="file" id="product_image" name="product_image" accept="image/*" required style="width: 274px;">
             </div>
-            <button type="submit">Upload</button>
+            <button type="submit" style="background-color: #ffc107; color: black; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 10px;">Upload</button>
         </form>
     </div>
 </div>
@@ -56,7 +63,7 @@
 <div id="product-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Coordenada del Producto</h2>
+        <h2>Ubicación de: <span id="modal-product-name"></span></h2>
         <table>
             <thead>
                 <tr>
@@ -81,4 +88,30 @@
         </table>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('#inventory-table tbody tr');
+        const modal = document.getElementById('product-modal');
+        const modalProductName = document.getElementById('modal-product-name');
+        const closeModal = document.querySelector('.modal .close');
+
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const productName = this.querySelector('td:nth-child(2)').textContent;
+                modalProductName.textContent = productName;
+                modal.style.display = 'block';
+            });
+        });
+
+        closeModal.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
 {% endblock %}

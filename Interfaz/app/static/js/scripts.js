@@ -81,4 +81,22 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = 'none';
         }
     });
+
+    const searchBar = document.getElementById('search-bar');
+    const inventoryTableRows = document.querySelectorAll('#inventory-table tbody tr');
+
+    if (searchBar) {
+        searchBar.addEventListener('input', function(event) {
+            const searchValue = event.target.value.toLowerCase();
+
+            inventoryTableRows.forEach(row => {
+                const cbValue = row.querySelector('.cb-column').textContent.toLowerCase();
+                if (cbValue.includes(searchValue)) {
+                    row.style.display = ''; // Show row
+                } else {
+                    row.style.display = 'none'; // Hide row
+                }
+            });
+        });
+    }
 });
