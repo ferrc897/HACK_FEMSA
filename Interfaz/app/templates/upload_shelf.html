@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Análisis de Planograma{% endblock %}
+
+{% block content %}
+<div class="container shelf-analysis-container">
+    <div class="shelf-image">
+        <img src="{{ url_for('static', filename='planograma.png') }}" alt="Planograma">
+    </div>
+    <div class="upload-form">
+        <h2>Subir Imagen del Planograma</h2>
+        <form action="{{ url_for('app.upload_shelf') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="shelf_image"><strong>Selecciona la imagen:</strong></label>
+                <input type="file" id="shelf_image" name="shelf_image" accept="image/*" required>
+            </div>
+            <button type="submit">Subir</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

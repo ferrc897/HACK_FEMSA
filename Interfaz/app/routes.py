@@ -1,16 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+from app import db  # Updated import
 from app.models import User, Product  # Import the User and Product models
 import os
 import csv
 
 app = Blueprint('app', __name__)
 
-UPLOAD_FOLDER = 'uploads'  # Ensure this matches the folder name
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
-CSV_FILE = 'CSV.csv'
+UPLOAD_FOLDER = os.path.join('static', 'uploads')  # Ensure uploads folder is inside static
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+CSV_FILE = os.path.join(os.getcwd(), 'CSV.csv')  # Updated to use os.path.join
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -123,20 +123,24 @@ def upload_product():
 
 @app.route('/upload_shelf', methods=['GET', 'POST'])
 def upload_shelf():
+    shelf_image = 'uploads/planograma.png'  # Path relative to static folder
     if request.method == 'POST':
-        if 'shelf_image' not in request.files:  # Cambiado de 'file' a 'shelf_image'
+        if 'shelf_image' not in request.files:
             flash('No file part', 'error')
             return redirect(request.url)
-        file = request.files['shelf_image']  # Cambiado de 'file' a 'shelf_image'
+        file = request.files['shelf_image']
         if file.filename == '':
             flash('No selected file', 'error')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            flash('Shelf image uploaded successfully!', 'success')
-            return redirect(url_for('app.home'))
-    return render_template('upload_shelf.html')
+            filename = 'planograma.png'  # Save the image as "planograma.png"
+            file_path = os.path.join(UPLOAD_FOLDER, filename)
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
+            file.save(file_path)
+            print(f"Image saved at: {os.path.abspath(file_path)}")  # Print absolute path for debugging
+            flash('Imagen del planograma subida exitosamente.', 'success')
+            return redirect(url_for('app.upload_shelf'))
+    return render_template('upload_shelf.html', shelf_image=shelf_image)
 
 @app.route('/test')
 def test():

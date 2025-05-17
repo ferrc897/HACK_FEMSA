@@ -5,13 +5,13 @@
 {% block content %}
 <div class="container inventory-container">
     <div class="inventory-grid">
-        <h2>Product Inventory</h2>
+        <h2>Inventario</h2>
         <table id="inventory-table">
             <thead>
                 <tr>
                     <th>CB</th>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,23 +29,23 @@
         </table>
     </div>
     <div class="upload-form">
-        <h2>Upload Product Image</h2>
+        <h2>Registrar producto nuevo</h2>
         <form action="{{ url_for('app.inventory') }}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="product_cb">CB:</label>
-                <input type="text" id="product_cb" name="product_cb" required>
+                <label for="product_cb"><strong>CB:</strong></label>
+                <input type="number" id="product_cb" name="product_cb" required min="0" style="display: inline-block; width: 20.5ch; height: 1ch;">
             </div>
             <div class="form-group">
-                <label for="product_name">Product Name:</label>
-                <input type="text" id="product_name" name="product_name" required>
+                <label for="product_name"><strong>Nombre:</strong></label>
+                <input type="text" id="product_name" name="product_name" required style="display: inline-block; width: 16ch; height: 1ch;">
             </div>
             <div class="form-group">
-                <label for="product_quantity">Quantity:</label>
-                <input type="number" id="product_quantity" name="product_quantity" required>
+                <label for="product_quantity"><strong>Cantidad:</strong></label>
+                <input type="number" id="product_quantity" name="product_quantity" min="0" max="9999" style="width: 6ch; height: 0.5ch;" required>
             </div>
             <div class="form-group">
-                <label for="product_image">Select Product Image:</label>
-                <input type="file" id="product_image" name="product_image" accept="image/*" required>
+                <label for="product_image"><strong>Sube la imagen:</strong></label>
+                <input type="file" id="product_image" name="product_image" accept="image/*" required style="width: 25ch;">
             </div>
             <button type="submit">Upload</button>
         </form>
@@ -56,7 +56,7 @@
 <div id="product-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Product Details</h2>
+        <h2>Coordenada del Producto</h2>
         <table>
             <thead>
                 <tr>

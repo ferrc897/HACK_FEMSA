@@ -51,7 +51,7 @@ image-comparison-app
 
 3. Install the required packages:
    ```
-   pip install -r ./Interfaz/image-comparison-app/requirements.txt
+   pip install -r ./Interfaz/requirements.txt
    ```
 
 4. Run the application:
