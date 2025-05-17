@@ -12,7 +12,9 @@
         <h1>Hamst3r</h1>
         <nav>
             <ul>
-                <li><a href="{{ url_for('app.register') }}">Register</a></li> <!-- Corrected -->
+                <li><a href="{{ url_for('app.register') }}">Register</a></li>
+                <li><a href="{{ url_for('app.login') }}">Login</a></li> <!-- Ensure 'app.login' is correct -->
+                <li><a href="{{ url_for('app.logout') }}">Logout</a></li>
                 <li><a href="{{ url_for('app.upload_product') }}">Upload Product Image</a></li>
                 <li><a href="{{ url_for('app.upload_shelf') }}">Upload Shelf Image</a></li>
             </ul>
