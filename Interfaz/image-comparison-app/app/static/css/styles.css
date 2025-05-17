@@ -4,6 +4,9 @@ body {
     padding: 0;
     background-color: #e3f2fd; /* Light blue background */
     color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body takes up the full viewport height */
 }
 
 header {
@@ -49,10 +52,15 @@ header {
     margin: 0;
     display: flex;
     gap: 15px;
+    align-items: center;
 }
 
 .header-nav ul li {
     display: inline;
+}
+
+.header-nav ul li:last-child {
+    margin-left: auto; /* Push the last item (Register/Login) to the far right */
 }
 
 .header-nav ul li a {
@@ -80,6 +88,25 @@ header {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#form-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#register-section, #login-section {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 h1 {
@@ -124,19 +151,17 @@ button:hover, input[type="submit"]:hover {
     background: #0056b3;
 }
 
+main {
+    flex: 1; /* Allow the main content to expand and push the footer down */
+}
+
 footer {
     text-align: center;
     padding: 10px 0;
-    background: #007bff;
+    background: #303030;
     color: #ffffff;
     position: relative;
     bottom: 0;
     width: 100%;
-    margin-top: 20px;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-}
-
-footer p {
-    margin: 0;
-    font-size: 0.9rem;
 }

@@ -21,4 +21,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    const showLoginLink = document.getElementById('show-login');
+    const showRegisterLink = document.getElementById('show-register');
+    const registerSection = document.getElementById('register-section');
+    const loginSection = document.getElementById('login-section');
+
+    if (showLoginLink && showRegisterLink && registerSection && loginSection) {
+        showLoginLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            registerSection.style.display = 'none';
+            loginSection.style.display = 'block';
+        });
+
+        showRegisterLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            loginSection.style.display = 'none';
+            registerSection.style.display = 'block';
+        });
+    }
 });

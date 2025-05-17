@@ -74,7 +74,7 @@ def login():
 def logout():
     session.clear()
     flash('You have been logged out.', 'success')
-    return redirect(url_for('app.login'))
+    return redirect(url_for('app.auth'))
 
 @app.route('/upload_product', methods=['GET', 'POST'])
 def upload_product():
@@ -113,3 +113,49 @@ def upload_shelf():
 @app.route('/test')
 def test():
     return "Flask is working!"
+
+@app.route('/auth', methods=['GET', 'POST'])
+def auth():
+    if request.method == 'POST':
+        if 'register' in request.form:
+            username = request.form['username']
+            email = request.form['email']
+            password = request.form['password']
+            confirm_password = request.form['confirm_password']
+
+            if password != confirm_password:
+                flash('Passwords do not match!', 'error')
+                return redirect(request.url)
+
+            if len(password) < 8:
+                flash('Password must be at least 8 characters long!', 'error')
+                return redirect(request.url)
+
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                flash('Email already registered!', 'error')
+                return redirect(request.url)
+
+            hashed_password = generate_password_hash(password, method='sha256')
+            new_user = User(username=username, email=email, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash('Registration successful! Please log in.', 'success')
+            return redirect(request.url)
+
+        elif 'login' in request.form:
+            email = request.form['email']
+            password = request.form['password']
+
+            user = User.query.filter_by(email=email).first()
+            if not user or not check_password_hash(user.password, password):
+                flash('Invalid email or password!', 'error')
+                return redirect(request.url)
+
+            session['user_id'] = user.id
+            session['username'] = user.username
+            flash('Login successful!', 'success')
+            return redirect(url_for('app.home'))
+
+    return render_template('register_login.html')
