@@ -51,12 +51,12 @@ image-comparison-app
 
 3. Install the required packages:
    ```
-   pip install -r requirements.txt
+   pip install -r ./Interfaz/image-comparison-app/requirements.txt
    ```
 
 4. Run the application:
    ```
-   python run.py
+   python ./Interfaz/image-comparison-app/run.py
    ```
 
 5. Open your web browser and go to `http://127.0.0.1:5000`.
