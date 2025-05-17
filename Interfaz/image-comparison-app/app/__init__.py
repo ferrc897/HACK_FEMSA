@@ -6,6 +6,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('../instance/config.py')  # Ensure the config file is correctly loaded
+    app.secret_key = app.config['SECRET_KEY']  # Load SECRET_KEY from the configuration file
 
     db.init_app(app)
 

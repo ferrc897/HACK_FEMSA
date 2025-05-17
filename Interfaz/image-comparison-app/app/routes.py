@@ -2,16 +2,35 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
-from app.models import User  # Import the User model
+from app.models import User, Product  # Import the User and Product models
 import os
+import csv
 
 app = Blueprint('app', __name__)
 
-UPLOAD_FOLDER = 'app/static/uploads'
+UPLOAD_FOLDER = 'uploads'  # Ensure this matches the folder name
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
+CSV_FILE = 'CSV.csv'
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def read_inventory():
+    inventory = []
+    if os.path.exists(CSV_FILE):
+        with open(CSV_FILE, mode='r', encoding='utf-8') as file:  # Ensure proper encoding
+            reader = csv.DictReader(file)
+            for row in reader:
+                inventory.append({'name': row['Nombre'], 'quantity': 10})  # Add dummy quantity
+    return inventory
+
+def write_inventory(product_name, product_quantity, product_image):
+    file_exists = os.path.exists(CSV_FILE)
+    with open(CSV_FILE, mode='a', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=['name', 'quantity', 'image'])
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow({'name': product_name, 'quantity': product_quantity, 'image': product_image})
 
 @app.route('/')
 def home():
@@ -79,19 +98,28 @@ def logout():
 @app.route('/upload_product', methods=['GET', 'POST'])
 def upload_product():
     if request.method == 'POST':
-        if 'product_image' not in request.files:  # Cambiado de 'file' a 'product_image'
-            flash('No file part', 'error')
+        product_name = request.form['product_name']
+        product_quantity = request.form['product_quantity']
+        product_image = request.files['product_image']
+
+        if not product_image or not allowed_file(product_image.filename):
+            flash('Invalid file or no file selected!', 'error')
             return redirect(request.url)
-        file = request.files['product_image']  # Cambiado de 'file' a 'product_image'
-        if file.filename == '':
-            flash('No selected file', 'error')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            flash('Product image uploaded successfully!', 'success')
-            return redirect(url_for('app.home'))
-    return render_template('upload_product.html')
+
+        filename = secure_filename(product_image.filename)
+        product_image.save(os.path.join(UPLOAD_FOLDER, filename))
+
+        # Save product to the database
+        new_product = Product(name=product_name, quantity=product_quantity, image=filename)
+        db.session.add(new_product)
+        db.session.commit()
+
+        flash('Product added successfully!', 'success')
+        return redirect(url_for('app.upload_product'))
+
+    # Fetch all products from the database
+    products = Product.query.all()
+    return render_template('upload_product.html', products=products)
 
 @app.route('/upload_shelf', methods=['GET', 'POST'])
 def upload_shelf():
@@ -159,3 +187,41 @@ def auth():
             return redirect(url_for('app.home'))
 
     return render_template('register_login.html')
+
+# Dummy database for inventory
+inventory_db = []
+
+@app.route('/inventory', methods=['GET', 'POST'])
+def inventory():
+    if request.method == 'POST':
+        product_cb = request.form['product_cb']
+        product_name = request.form['product_name']
+        product_quantity = request.form['product_quantity']
+        product_image = request.files['product_image']
+
+        if not product_image or not allowed_file(product_image.filename):
+            flash('Invalid file or no file selected!', 'error')
+            return redirect(request.url)
+
+        # Rename the image file to the CB value
+        filename = secure_filename(f"{product_cb}.{product_image.filename.rsplit('.', 1)[1].lower()}")
+        image_path = os.path.join(UPLOAD_FOLDER, filename)
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
+        product_image.save(image_path)
+
+        # Add the product to the dummy database
+        inventory_db.append({
+            'cb': product_cb,
+            'name': product_name,
+            'quantity': product_quantity,
+            'image': filename,
+            'charola': 'N/A',  # Dummy data for charola
+            'posicion': 'N/A',  # Dummy data for posicion
+            'frentes': 'N/A'  # Dummy data for frentes
+        })
+
+        flash('Product added successfully!', 'success')
+        return redirect(url_for('app.inventory'))
+
+    # Pass the dummy database to the template
+    return render_template('inventory.html', products=inventory_db)

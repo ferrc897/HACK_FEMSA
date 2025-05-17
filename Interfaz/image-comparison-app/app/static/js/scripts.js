@@ -40,4 +40,45 @@ document.addEventListener('DOMContentLoaded', function() {
             registerSection.style.display = 'block';
         });
     }
+
+    const inventoryTable = document.getElementById('inventory-table');
+    const modal = document.getElementById('product-modal');
+    const modalCharola = document.getElementById('modal-charola');
+    const modalPosicion = document.getElementById('modal-posicion');
+    const modalFrentes = document.getElementById('modal-frentes');
+    const modalImage = document.getElementById('modal-image');
+    const closeModal = document.querySelector('.modal .close');
+
+    if (inventoryTable) {
+        inventoryTable.addEventListener('click', function(event) {
+            const row = event.target.closest('tr');
+            if (row) {
+                modalCharola.textContent = row.dataset.charola || 'N/A';
+                modalPosicion.textContent = row.dataset.posicion || 'N/A';
+                modalFrentes.textContent = row.dataset.frentes || 'N/A';
+
+                // Read the data-image attribute and assign it to the modal image src
+                const imageSrc = row.dataset.image;
+                if (imageSrc) {
+                    modalImage.src = imageSrc;
+                } else {
+                    modalImage.src = ''; // Clear the image if no source is found
+                }
+
+                modal.style.display = 'flex';
+            }
+        });
+    }
+
+    if (closeModal) {
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 });

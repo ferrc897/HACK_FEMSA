@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory{% endblock %}
+
+{% block content %}
+<div class="container inventory-container">
+    <div class="inventory-grid">
+        <h2>Product Inventory</h2>
+        <table id="inventory-table">
+            <thead>
+                <tr>
+                    <th>CB</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr data-charola="{{ product.charola }}" 
+                    data-posicion="{{ product.posicion }}" 
+                    data-frentes="{{ product.frentes }}" 
+                    data-image="{{ url_for('static', filename='uploads/' + product.image) }}">
+                    <td>{{ product.cb }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="upload-form">
+        <h2>Upload Product Image</h2>
+        <form action="{{ url_for('app.inventory') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="product_cb">CB:</label>
+                <input type="text" id="product_cb" name="product_cb" required>
+            </div>
+            <div class="form-group">
+                <label for="product_name">Product Name:</label>
+                <input type="text" id="product_name" name="product_name" required>
+            </div>
+            <div class="form-group">
+                <label for="product_quantity">Quantity:</label>
+                <input type="number" id="product_quantity" name="product_quantity" required>
+            </div>
+            <div class="form-group">
+                <label for="product_image">Select Product Image:</label>
+                <input type="file" id="product_image" name="product_image" accept="image/*" required>
+            </div>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+</div>
+
+<!-- Pop-up Modal -->
+<div id="product-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Product Details</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Charola</th>
+                    <th>Posicion en Charola</th>
+                    <th>Cantidad de Frentes</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="modal-charola"></td>
+                    <td id="modal-posicion"></td>
+                    <td id="modal-frentes"></td>
+                    <td>
+                        <div class="image-container">
+                            <img id="modal-image" src="" alt="Product Image">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
