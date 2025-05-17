@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db  # Updated import
@@ -95,6 +95,7 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('app.auth'))
 
+
 @app.route('/upload_product', methods=['GET', 'POST'])
 def upload_product():
     if request.method == 'POST':
@@ -107,19 +108,23 @@ def upload_product():
             return redirect(request.url)
 
         filename = secure_filename(product_image.filename)
-        product_image.save(os.path.join(UPLOAD_FOLDER, filename))
 
-        # Save product to the database
-        new_product = Product(name=product_name, quantity=product_quantity, image=filename)
+        upload_path = os.path.join('app', 'static', 'uploads', 'products')
+        os.makedirs(upload_path, exist_ok=True)
+
+        file_path = os.path.join(upload_path, filename)
+        product_image.save(file_path)
+
+        new_product = Product(name=product_name, quantity=product_quantity, image=upload_path)
         db.session.add(new_product)
         db.session.commit()
 
         flash('Product added successfully!', 'success')
         return redirect(url_for('app.upload_product'))
 
-    # Fetch all products from the database
     products = Product.query.all()
     return render_template('upload_product.html', products=products)
+
 
 @app.route('/upload_shelf', methods=['GET', 'POST'])
 def upload_shelf():
@@ -134,8 +139,8 @@ def upload_shelf():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = 'planograma.png'  # Save the image as "planograma.png"
-            file_path = os.path.join(UPLOAD_FOLDER, filename)
-            os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
+            file_path = os.path.join(current_app.root_path, 'static', 'uploads', filename)
+            os.makedirs(os.path.join('app', 'static', 'uploads'), exist_ok=True)
             file.save(file_path)
             print(f"Image saved at: {os.path.abspath(file_path)}")  # Print absolute path for debugging
             flash('Imagen del planograma subida exitosamente.', 'success')
